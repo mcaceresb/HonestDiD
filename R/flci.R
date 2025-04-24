@@ -271,7 +271,7 @@
       dplyr::filter(.data$status == "optimal" | .data$status == "optimal_inaccurate") %>%
       dplyr::filter(.data$CI.halflength == min(.data$CI.halflength))
   } else {
-    optimalCIDF <- .findWorstCaseBiasGivenH(hstar, sigma, numPrePeriods, numPostPeriods, l_vec, TRUE)
+    optimalCIDF <- .findWorstCaseBiasGivenH(hstar, sigma, numPrePeriods, numPostPeriods, l_vec, returnDF = TRUE)
     optimalCIDF$m <- M
     optimalCIDF$CI.halflength <- .qfoldednormal(p = 1-alpha, mu = (M * optimalCIDF$value)/hstar) * hstar
   }
@@ -291,7 +291,7 @@
 
   # Function of h, which is convex (returns CI half length)
   .f <- function(h, ...) {
-    biasDF <- .findWorstCaseBiasGivenH(h, sigma, numPrePeriods, numPostPeriods, l_vec, returnDF)
+    biasDF <- .findWorstCaseBiasGivenH(h, sigma, numPrePeriods, numPostPeriods, l_vec, returnDF = returnDF)
     maxBias <- M * biasDF$value
     if (biasDF$value < Inf) {
       base::return(.qfoldednormal(p = 1-alpha, mu = maxBias/h, seed=seed) * h)
